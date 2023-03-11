@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MetaTags from "react-meta-tags";
 import { Link } from "react-router-dom";
 import { Card, CardBody, Col, Container, Input, Row } from "reactstrap";
@@ -9,9 +9,14 @@ import lightLogo from "../../assets/images/logo-light.png";
 import { useFormik } from "formik";
 import { Form } from "react-bootstrap";
 import signUpImage from "../../assets/images/auth/sign-up.png";
+import { StateAndDistrict } from "../../constants/StateList";
 import { SignUpSchema } from "../../utils/ValidationSchema/index";
 
 const SignUp = () => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedDistrict, setDistricts] = useState([]);
+
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -51,6 +56,10 @@ const SignUp = () => {
       //   }
     },
   });
+  const handleDistrict = (state) => {
+    const res = StateAndDistrict.find((e) => e.state === state);
+    setDistricts(res?.districts);
+  };
   return (
     <React.Fragment>
       <div>
@@ -100,12 +109,6 @@ const SignUp = () => {
                               </div>
                               <Form action="/" className="auth-form">
                                 <div className="mb-3">
-                                  <label
-                                    htmlFor="fullName"
-                                    className="form-label"
-                                  >
-                                    Full Name
-                                  </label>
                                   <Input
                                     type="text"
                                     className="form-control"
@@ -117,16 +120,10 @@ const SignUp = () => {
                                       formik.touched.fullName &&
                                       Boolean(formik.errors.fullName)
                                     }
-                                    placeholder="Enter your Full Name"
+                                    placeholder="Enter your Full name"
                                   />
                                 </div>
                                 <div className="mb-3">
-                                  <label
-                                    htmlFor="instititeName"
-                                    className="form-label"
-                                  >
-                                    Institite Name
-                                  </label>
                                   <Input
                                     type="text"
                                     className="form-control"
@@ -138,38 +135,107 @@ const SignUp = () => {
                                       formik.touched.instituteName &&
                                       Boolean(formik.errors.instituteName)
                                     }
-                                    placeholder="Enter your Institite Name"
+                                    placeholder="Enter your Institution name"
                                   />
                                 </div>
                                 <div className="mb-3">
-                                  <label
-                                    htmlFor="passwordInput"
-                                    className="form-label"
+                                  <Input
+                                    id="instituteType"
+                                    // className="form-control"
+                                    required
+                                    name="instituteType"
+                                    type="select"
+                                    // placeholder="Institution Type"
+                                    onChange={(e) => formik.handleChange(e)}
+                                    error={
+                                      formik.touched.instituteType &&
+                                      Boolean(formik.errors.instituteType)
+                                    }
                                   >
-                                    Email
-                                  </label>
+                                    <option>Institution type</option>
+                                    <option value={1}>Training Center</option>
+                                    <option value={2}>College</option>
+                                    <option value={3}>Tuition Center</option>
+                                    <option value={4}>School</option>
+                                  </Input>
+                                </div>
+
+                                <div className="mb-3">
                                   <Input
                                     type="email"
                                     className="form-control"
                                     required
-                                    id="emailInput"
+                                    id="email"
                                     placeholder="Enter your email"
+                                    name="email"
+                                    onChange={(e) => formik.handleChange(e)}
+                                    error={
+                                      formik.touched.email &&
+                                      Boolean(formik.errors.email)
+                                    }
                                   />
                                 </div>
                                 <div className="mb-3">
-                                  <label
-                                    htmlFor="emailInput"
-                                    className="form-label"
-                                  >
-                                    Password
-                                  </label>
                                   <Input
                                     type="password"
                                     className="form-control"
                                     id="passwordInput"
+                                    name="password"
+                                    onChange={(e) => formik.handleChange(e)}
+                                    error={
+                                      formik.touched.password &&
+                                      Boolean(formik.errors.password)
+                                    }
                                     placeholder="Enter your password"
                                   />
                                 </div>
+                                <div className="mb-3">
+                                  <Input
+                                    id="state"
+                                    // className="form-control"
+                                    required
+                                    name="state"
+                                    type="select"
+                                    // placeholder="Institution Type"
+                                    onChange={(e) => {
+                                      handleDistrict(e.target.value);
+                                      formik.handleChange(e);
+                                    }}
+                                    error={
+                                      formik.touched.state &&
+                                      Boolean(formik.errors.state)
+                                    }
+                                  >
+                                    <option>Select State</option>
+                                    {StateAndDistrict.map((item) => (
+                                      <option value={item.state}>
+                                        {item.state}
+                                      </option>
+                                    ))}
+                                  </Input>
+                                </div>
+                                {selectedDistrict && (
+                                  <div className="mb-3">
+                                    <Input
+                                      id="district"
+                                      // className="form-control"
+                                      required
+                                      name="district"
+                                      type="select"
+                                      // placeholder="Institution Type"
+                                      onChange={(e) => formik.handleChange(e)}
+                                      error={
+                                        formik.touched.district &&
+                                        Boolean(formik.errors.district)
+                                      }
+                                    >
+                                      <option>Select District</option>
+                                      {selectedDistrict?.map((item) => (
+                                        <option value={item}>{item}</option>
+                                      ))}
+                                    </Input>
+                                  </div>
+                                )}
                                 <div className="mb-4">
                                   <div className="form-check">
                                     <Input
