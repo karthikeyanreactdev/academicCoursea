@@ -1,0 +1,10 @@
+{
+  "material-icon-theme.activeIconPack": "react",
+  "material-icon-theme.files.associations": {},
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.formatOnSave": true,
+    "source.fixAll": true
+  },
+  "html.completion.attributeDefaultValue": "singlequotes"
+}
